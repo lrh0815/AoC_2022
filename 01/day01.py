@@ -1,54 +1,47 @@
 from aocd.models import Puzzle
 
 
-def read_elves(puzzle: Puzzle):
-    i = 0
-    elves = []
-    elves.append(0)
-    for cal in puzzle.input_data.splitlines():
-        if cal == "":
-            i += 1
-            elves.append(0)
+def read_calories_per_elf(puzzle: Puzzle):
+    calories_per_elf = [0]
+    for calories in puzzle.input_data.splitlines():
+        if calories == "":
+            calories_per_elf.append(0)
         else:
-            x = int(cal)
-            elves[i] += x
+            calories_per_elf[-1] += int(calories)
 
-    return elves
+    calories_per_elf.sort(reverse=True)
 
-def solve_a(elves: list):
-    sortedElves = elves.copy()
-    sortedElves.sort(reverse=True)
+    return calories_per_elf
 
-    answer = sortedElves[0]
+def solve_a(calories_per_elf: list):
+    answer = calories_per_elf[0]
 
     print(answer)
     return answer
 
 
-def solve_b(elves: list):
-    sortedElves = elves.copy()
-    sortedElves.sort(reverse=True)
+def solve_b(calories_per_elf: list):
 
-    print(sortedElves[:3])
+    print(calories_per_elf[:3])
 
-    answer = sum(sortedElves[:3])
+    answer = sum(calories_per_elf[:3])
     print(answer)
 
     return answer
 
 
 if __name__ == "__main__":
-    submitAnswers = False
+    submit_answers = False
 
     puzzle = Puzzle(year=2022, day=1)
 
-    elves = read_elves(puzzle)
+    calories_per_elf = read_calories_per_elf(puzzle)
 
-    answer_a = solve_a(elves)
-    answer_b = solve_b(elves)
+    answer_a = solve_a(calories_per_elf)
+    answer_b = solve_b(calories_per_elf)
 
     print()
-    if submitAnswers:
+    if submit_answers:
         print("Submitting answers...")
         puzzle.answer_a = answer_a
         puzzle.answer_b = answer_b
