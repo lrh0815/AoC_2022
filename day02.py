@@ -63,9 +63,6 @@ def solve_b(input):
 
 
 if __name__ == "__main__":
-
     ps = PuzzleSolver(2, solve_a, solve_b)
-
     ps.test(15, 12)
     ps.solve()
-
