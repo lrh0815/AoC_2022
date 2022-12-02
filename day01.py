@@ -25,6 +25,4 @@ def solve_b(input):
 
 
 if __name__ == "__main__":
-    ps = PuzzleSolver(1, solve_a, solve_b)
-    ps.test(24000, 45000)
-    ps.solve()
+    PuzzleSolver(1, 24000, solve_a, 45000, solve_b).solve()
