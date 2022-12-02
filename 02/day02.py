@@ -36,7 +36,6 @@ def get_own_shape_b(shapes):
 
 
 def calculate_score(round, own_shape_getter):
-
     shapes = round.split(" ")
 
     opponent_shape = shapes[0]
