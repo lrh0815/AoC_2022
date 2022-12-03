@@ -1,19 +1,16 @@
 from puzzle_solver.PuzzleSolver import PuzzleSolver
-from itertools import islice
+
 
 class Day03:
-    def __init__(self):
-        self.puzzle_solver = PuzzleSolver(3, 157, self.solve_a, 70, self.solve_b)
+    def run(self):
+        PuzzleSolver(3, self.solve_a, self.solve_b, True)\
+            .with_expected_a(157)\
+            .with_expected_b(70)\
+            .test()\
+            .solve()\
+            .submit(do_submit=True)
 
-    def test(self):
-        self.puzzle_solver.test()
-        return self
-    
-    def solve(self):
-        self.puzzle_solver.solve()#('a', do_submit = False).solve('b', do_submit= False)
-        return self
-
-    def solve_a(self, input : str):
+    def solve_a(self, input: str):
         answer = 0
         for rucksack in input.splitlines():
             comp1 = list(rucksack[0:len(rucksack)//2])
@@ -29,12 +26,13 @@ class Day03:
             prio += 58
         return prio
 
-    def solve_b(self, input : str):
+    def solve_b(self, input: str):
         answer = 0
         rucksacks = input.splitlines()
         groups = list(self._get_groups(rucksacks))
         for group in groups:
-            common = list(set([value for value in group[0] if value in group[1] and value in group[2]]))[0]
+            common = list(set([value for value in group[0]
+                          if value in group[1] and value in group[2]]))[0]
             prio = self._get_prio(common)
             answer += prio
 
@@ -46,6 +44,4 @@ class Day03:
 
 
 if __name__ == "__main__":
-    Day03().solve()
-
-    
+    Day03().run()
