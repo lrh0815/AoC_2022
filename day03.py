@@ -3,7 +3,7 @@ from puzzle_solver.PuzzleSolver import PuzzleSolver
 
 class Day03:
     def run(self):
-        PuzzleSolver(3, self.solve_a, self.solve_b, True)\
+        PuzzleSolver(2022, 3, self.solve_a, self.solve_b)\
             .with_expected_a(157)\
             .with_expected_b(70)\
             .test()\

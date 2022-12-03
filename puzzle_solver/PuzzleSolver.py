@@ -4,9 +4,9 @@ from colorama import Fore
 
 class PuzzleSolver(object):
 
-    def __init__(self, day: int, solver_a, solver_b, debug: bool = False):
+    def __init__(self, year: int, day: int, solver_a, solver_b, debug: bool = False):
         self.debug = debug
-        self.puzzle = Puzzle(2022, day)
+        self.puzzle = Puzzle(year, day)
         self.solvers = {'a': solver_a, 'b': solver_b}
         self.expected_answers = {'a': None, 'b': None}
         self.test_results = {'a': None, 'b': None}
