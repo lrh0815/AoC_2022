@@ -23,9 +23,9 @@ class PuzzleSolver(object):
 
     def _get_parts(self, part):
         if part == None:
-            parts = {'a', 'b'}
+            parts = ['a', 'b']
         else:
-            parts = {'a'}
+            parts = [part]
         return parts
 
     def _solve(self, part, do_submit):
@@ -34,7 +34,12 @@ class PuzzleSolver(object):
             answer = solver(self.puzzle.input_data)
             print(f'Answer {part}: {answer}')
             if do_submit == True and answer != None:
-                self.puzzle.answer_b = answer
+                if part == 'a':
+                    self.puzzle.answer_b = answer
+                elif part == 'b':
+                    self.puzzle.answer_b = answer
+                else:
+                    print(Fore.CYAN + 'Not submitted' + Fore.RESET)
             else:
                 print(Fore.CYAN + 'Not submitted' + Fore.RESET)
 
