@@ -1,3 +1,5 @@
+import sys
+sys.path.append('c:\\code\AoC_2022')
 from puzzle_solver.PuzzleSolver import PuzzleSolver
 
 
