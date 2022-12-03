@@ -27,4 +27,5 @@ def solve_b(input):
 
 
 if __name__ == "__main__":
-    PuzzleSolver(1, solve_a, solve_b).with_expected_a(24000).with_expected_b(45000).test().solve().submit()
+    PuzzleSolver(1, solve_a, solve_b).with_expected_a(
+        24000).with_expected_b(45000).test().solve().submit()
