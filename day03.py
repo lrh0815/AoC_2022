@@ -16,11 +16,11 @@ class Day03:
             comp1 = list(rucksack[0:len(rucksack)//2])
             comp2 = list(rucksack[len(rucksack)//2:])
             common = list(set([value for value in comp1 if value in comp2]))[0]
-            prio = self._get_prio(common)
+            prio = self.__get_prio(common)
             answer += prio
         return answer
 
-    def _get_prio(self, common):
+    def __get_prio(self, common):
         prio = ord(common)-ord('a')+1
         if prio < 1:
             prio += 58
@@ -29,16 +29,16 @@ class Day03:
     def solve_b(self, input: str):
         answer = 0
         rucksacks = input.splitlines()
-        groups = list(self._get_groups(rucksacks))
+        groups = list(self.__get_groups(rucksacks))
         for group in groups:
             common = list(set([value for value in group[0]
                           if value in group[1] and value in group[2]]))[0]
-            prio = self._get_prio(common)
+            prio = self.__get_prio(common)
             answer += prio
 
         return answer
 
-    def _get_groups(self, rucksacks):
+    def __get_groups(self, rucksacks):
         for i in range(0, len(rucksacks), 3):
             yield rucksacks[i:i+3]
 

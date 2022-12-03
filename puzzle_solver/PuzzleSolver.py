@@ -11,7 +11,7 @@ class PuzzleSolver(object):
         self.expected_answers = {'a': None, 'b': None}
         self.test_results = {'a': None, 'b': None}
         self.solutions = {'a': None, 'b': None}
-        self.submitters = {'a': self._submit_a, 'b': self._submit_b}
+        self.submitters = {'a': self.__submit_a, 'b': self.__submit_b}
 
     def with_expected_a(self, expected_answer):
         self.expected_answers['a'] = expected_answer
@@ -29,7 +29,7 @@ class PuzzleSolver(object):
         print(self.puzzle.example_data)
         return self
 
-    def _get_parts(self, part):
+    def __get_parts(self, part):
         if part == None:
             parts = ['a', 'b']
         else:
@@ -38,15 +38,15 @@ class PuzzleSolver(object):
 
     def test(self, part=None):
         print()
-        for part in self._get_parts(part):
-            self.test_results[part] = self._test_for_part(part)
+        for part in self.__get_parts(part):
+            self.test_results[part] = self.__test_for_part(part)
         return self
 
-    def _test_for_part(self, part):
+    def __test_for_part(self, part):
         print(f'Test {part}: ', end='')
-        return self._test(self.solvers[part], self.expected_answers[part])
+        return self.__test(self.solvers[part], self.expected_answers[part])
 
-    def _test(self, solver, expected_answer):
+    def __test(self, solver, expected_answer):
         if solver != None and expected_answer != None:
             answer = solver(self.puzzle.example_data)
             if answer == expected_answer:
@@ -62,15 +62,15 @@ class PuzzleSolver(object):
 
     def solve(self, part=None):
         print()
-        for part in self._get_parts(part):
-            self.solutions[part] = self._solve_for_part(part)
+        for part in self.__get_parts(part):
+            self.solutions[part] = self.__solve_for_part(part)
         return self
 
-    def _solve_for_part(self, part):
+    def __solve_for_part(self, part):
         print(f'Solve {part}: ', end='')
-        return self._solve(self.test_results[part], self.solvers[part])
+        return self.__solve(self.test_results[part], self.solvers[part])
 
-    def _solve(self, test_result: bool, solver):
+    def __solve(self, test_result: bool, solver):
         if test_result == False:
             print(Fore.RED + 'test failed' + Fore.RESET)
         elif test_result == None:
@@ -85,15 +85,15 @@ class PuzzleSolver(object):
 
     def submit(self, part=None, do_submit: bool = False):
         print()
-        for part in self._get_parts(part):
-            self._submit_for_part(part, do_submit)
+        for part in self.__get_parts(part):
+            self.__submit_for_part(part, do_submit)
         return self
 
-    def _submit_for_part(self, part, do_submit: bool):
+    def __submit_for_part(self, part, do_submit: bool):
         print(f'Submit {part}: ', end='')
-        self._submit(do_submit, self.solutions[part], self.submitters[part])
+        self.__submit(do_submit, self.solutions[part], self.submitters[part])
 
-    def _submit(self, do_submit: bool, solution, submitter):
+    def __submit(self, do_submit: bool, solution, submitter):
         if solution == None:
             print(Fore.RED + 'not solved')
         elif do_submit == True:
@@ -102,13 +102,13 @@ class PuzzleSolver(object):
         else:
             print(f'{solution} ' + Fore.CYAN + 'not submitted')
 
-    def _submit_a(self, solution):
+    def __submit_a(self, solution):
         if self.debug:
             print(Fore.MAGENTA + f'_submit_a {solution}' + Fore.RESET)
         else:
             self.puzzle.answer_a = solution
 
-    def _submit_b(self, solution):
+    def __submit_b(self, solution):
         if self.debug:
             print(Fore.MAGENTA + f'_submit_b {solution}' + Fore.RESET)
         else:
