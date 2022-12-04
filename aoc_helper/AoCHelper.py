@@ -1,14 +1,30 @@
 from aocd.models import Puzzle
 from colorama import Fore
+from abc import ABC, abstractmethod
 
 
-class PuzzleSolver(object):
+class PuzzleSolver(ABC):
+    def __init__(self, year: int, day: int, example_answer_a, example_answer_b, do_submit: bool):
+        self.year = year
+        self.day = day
+        self.example_answers = {'a': example_answer_a, 'b': example_answer_b}
+        self.solvers = {'a': self.solve_a, 'b': self.solve_b}
+        self.do_submit = do_submit
 
-    def __init__(self, year: int, day: int, solver_a, solver_b, debug: bool = False):
-        self.debug = debug
-        self.puzzle = Puzzle(year, day)
-        self.solvers = {'a': solver_a, 'b': solver_b}
-        self.expected_answers = {'a': None, 'b': None}
+    @abstractmethod
+    def solve_a(self, input: list[str]):
+        pass
+
+    @abstractmethod
+    def solve_b(self, input: list[str]):
+        pass
+
+
+class AoCHelper(object):
+
+    def __init__(self, puzzle_solver: PuzzleSolver):
+        self.puzzle = Puzzle(puzzle_solver.year, puzzle_solver.day)
+        self.puzzle_solver = puzzle_solver
         self.test_results = {'a': None, 'b': None}
         self.solutions = {'a': None, 'b': None}
         self.submitters = {'a': self.__submit_a, 'b': self.__submit_b}
@@ -44,7 +60,7 @@ class PuzzleSolver(object):
 
     def __test_for_part(self, part):
         print(f'Test {part}: ', end='')
-        return self.__test(self.solvers[part], self.expected_answers[part])
+        return self.__test(self.puzzle_solver.solvers[part], self.puzzle_solver.example_answers[part])
 
     def __test(self, solver, expected_answer):
         if solver != None and expected_answer != None:
@@ -68,7 +84,7 @@ class PuzzleSolver(object):
 
     def __solve_for_part(self, part):
         print(f'Solve {part}: ', end='')
-        return self.__solve(self.test_results[part], self.solvers[part])
+        return self.__solve(self.test_results[part], self.puzzle_solver.solvers[part])
 
     def __solve(self, test_result: bool, solver):
         if test_result == False:
@@ -83,33 +99,27 @@ class PuzzleSolver(object):
             return answer
         return None
 
-    def submit(self, part=None, do_submit: bool = False):
+    def submit(self, part=None):
         print()
         for part in self.__get_parts(part):
-            self.__submit_for_part(part, do_submit)
+            self.__submit_for_part(part)
         return self
 
-    def __submit_for_part(self, part, do_submit: bool):
+    def __submit_for_part(self, part):
         print(f'Submit {part}: ', end='')
-        self.__submit(do_submit, self.solutions[part], self.submitters[part])
+        self.__submit(self.solutions[part], self.submitters[part])
 
-    def __submit(self, do_submit: bool, solution, submitter):
+    def __submit(self, solution, submitter):
         if solution == None:
             print(Fore.RED + 'not solved')
-        elif do_submit == True:
+        elif self.puzzle_solver.do_submit == True:
             print(solution)
             submitter(solution)
         else:
             print(f'{solution} ' + Fore.CYAN + 'not submitted')
 
     def __submit_a(self, solution):
-        if self.debug:
-            print(Fore.MAGENTA + f'_submit_a {solution}' + Fore.RESET)
-        else:
-            self.puzzle.answer_a = solution
+        self.puzzle.answer_a = solution
 
     def __submit_b(self, solution):
-        if self.debug:
-            print(Fore.MAGENTA + f'_submit_b {solution}' + Fore.RESET)
-        else:
-            self.puzzle.answer_b = solution
+        self.puzzle.answer_b = solution

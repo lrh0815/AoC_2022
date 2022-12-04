@@ -1,14 +1,9 @@
-from puzzle_solver.PuzzleSolver import PuzzleSolver
+from aoc_helper.AoCHelper import PuzzleSolver, AoCHelper
 
 
-class Day03:
-    def run(self):
-        PuzzleSolver(2022, 3, self.solve_a, self.solve_b)\
-            .with_expected_a(157)\
-            .with_expected_b(70)\
-            .test()\
-            .solve()\
-            .submit(do_submit=False)
+class Day(PuzzleSolver):
+    def __init__(self):
+        PuzzleSolver.__init__(self, 2022, 3, 157, 70, False)
 
     def solve_a(self, input: list[str]):
         answer = 0
@@ -44,4 +39,4 @@ class Day03:
 
 
 if __name__ == "__main__":
-    Day03().run()
+    AoCHelper(Day()).test().solve().submit()

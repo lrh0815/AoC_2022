@@ -1,16 +1,11 @@
 import sys
 sys.path.append('c:\\code\AoC_2022')
-from puzzle_solver.PuzzleSolver import PuzzleSolver
+from aoc_helper.AoCHelper import PuzzleSolver, AoCHelper
 
 
-class Day:
-    def run(self):
-        PuzzleSolver(2021, 1, self.solve_a, self.solve_b)\
-            .with_expected_a(7)\
-            .with_expected_b(5)\
-            .test()\
-            .solve()\
-            .submit(do_submit=True)
+class Day(PuzzleSolver):
+    def __init__(self):
+        PuzzleSolver.__init__(self, 2021, 1, 7, 5, False)
 
     def solve_a(self, input: list[str]):
         depths = list(map(int, input))
@@ -33,4 +28,4 @@ class Day:
 
 
 if __name__ == "__main__":
-    Day().run()
+    AoCHelper(Day()).test().solve().submit()

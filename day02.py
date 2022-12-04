@@ -1,14 +1,9 @@
-from puzzle_solver.PuzzleSolver import PuzzleSolver
+from aoc_helper.AoCHelper import PuzzleSolver, AoCHelper
 
 
-class Day:
-    def run(self):
-        PuzzleSolver(2022, 2, self.solve_a, self.solve_b)\
-            .with_expected_a(15)\
-            .with_expected_b(12)\
-            .test()\
-            .solve()\
-            .submit()
+class Day(PuzzleSolver):
+    def __init__(self):
+        PuzzleSolver.__init__(self, 2022, 2, 15, 12, False)
 
     def solve_a(self, input):
         return self.__solve(input, self.__get_own_shape_a)
@@ -69,4 +64,4 @@ class Day:
 
 
 if __name__ == "__main__":
-    Day().run()
+    AoCHelper(Day()).test().solve().submit()

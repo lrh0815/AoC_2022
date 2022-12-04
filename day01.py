@@ -1,14 +1,9 @@
-from puzzle_solver.PuzzleSolver import PuzzleSolver
+from aoc_helper.AoCHelper import PuzzleSolver, AoCHelper
 
 
-class Day:
-    def run(self):
-        PuzzleSolver(2022, 1, self.solve_a, self.solve_b)\
-            .with_expected_a(24000)\
-            .with_expected_b(45000)\
-            .test()\
-            .solve()\
-            .submit()
+class Day(PuzzleSolver):
+    def __init__(self):
+        PuzzleSolver.__init__(self, 2022, 1, 24000, 45000, False)
 
     def solve_a(self, input):
         calories_per_elf = self.__read_calories_per_elf(input)
@@ -34,4 +29,4 @@ class Day:
 
 
 if __name__ == "__main__":
-    Day().run()
+    AoCHelper(Day()).test().solve().submit()

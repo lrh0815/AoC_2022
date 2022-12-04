@@ -1,14 +1,9 @@
-from puzzle_solver.PuzzleSolver import PuzzleSolver
+from aoc_helper.AoCHelper import PuzzleSolver, AoCHelper
 
 
-class Day:
-    def run(self):
-        PuzzleSolver(2022, 4, self.solve_a, self.solve_b)\
-            .with_expected_a(2)\
-            .with_expected_b(4)\
-            .test()\
-            .solve()\
-            .submit(do_submit=False)
+class Day(PuzzleSolver):
+    def __init__(self):
+        PuzzleSolver.__init__(self, 2022, 4, 2, 4, False)
 
     def solve_a(self, input: list[str]):
         answer = 0
@@ -29,7 +24,8 @@ class Day:
         return list(map(self.__get_assignment, line.split(',')))
 
     def __get_assignment(self, assignment_string: str):
-        assignment_range = list(map(lambda x: int(x), assignment_string.split('-')))
+        assignment_range = list(
+            map(lambda x: int(x), assignment_string.split('-')))
         return [x for x in range(assignment_range[0], assignment_range[1] + 1)]
 
     def solve_b(self, input: list[str]):
@@ -42,4 +38,4 @@ class Day:
 
 
 if __name__ == "__main__":
-    Day().run()
+    AoCHelper(Day()).test().solve().submit()

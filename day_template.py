@@ -1,23 +1,17 @@
-from puzzle_solver.PuzzleSolver import PuzzleSolver
+from aoc_helper.AoCHelper import PuzzleSolver, AoCHelper
 
 
-class Day:
-    def run(self):
-        PuzzleSolver(2022, 0, self.solve_a, self.solve_b)\
-            .with_expected_a(None)\
-            .with_expected_b(None)\
-            .test()\
-            .solve()\
-            .submit(do_submit=True)
+class Day(PuzzleSolver):
+    def __init__(self):
+        PuzzleSolver.__init__(self, 2022, 0, None, None, True)
 
     def solve_a(self, input: list[str]):
-        answer = None
-        return answer
+        print(input)
+        return 1
 
     def solve_b(self, input: list[str]):
-        answer = None
-        return answer
+        return None
 
 
 if __name__ == "__main__":
-    Day().run()
+    AoCHelper(Day()).test().solve().submit()
