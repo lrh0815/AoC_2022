@@ -12,26 +12,30 @@ class Day:
 
     def solve_a(self, input: list[str]):
         answer = 0
-        for line in input:
-            pair = line.split(',')
-            assignment1 = self.__get_assignment(pair[0])
-            assignment2 = self.__get_assignment(pair[1])
-            intersection = [val for val in assignment1 if val in assignment2]
-            if intersection == assignment1 or intersection == assignment2:
+        for assignments in self.__get_all_assignments(input):
+            intersection = self.__get_intersection(assignments)
+            if intersection == assignments[0] or intersection == assignments[1]:
                 answer += 1
         return answer
 
-    def __get_assignment(self, asstr : str):
-        assignment = list(map(lambda x: int(x), asstr.split('-')))
-        return [x for x in range(assignment[0], assignment[1] + 1)]
+    def __get_intersection(self, assignments: list[int]):
+        intersection = [val for val in assignments[0] if val in assignments[1]]
+        return intersection
+
+    def __get_all_assignments(self, input: list[str]):
+        return list(map(self.__get_assignments, input))
+
+    def __get_assignments(self, line: str):
+        return list(map(self.__get_assignment, line.split(',')))
+
+    def __get_assignment(self, assignment_string: str):
+        assignment_range = list(map(lambda x: int(x), assignment_string.split('-')))
+        return [x for x in range(assignment_range[0], assignment_range[1] + 1)]
 
     def solve_b(self, input: list[str]):
         answer = 0
-        for line in input:
-            pair = line.split(',')
-            assignment1 = self.__get_assignment(pair[0])
-            assignment2 = self.__get_assignment(pair[1])
-            intersection = [val for val in assignment1 if val in assignment2]
+        for assignments in self.__get_all_assignments(input):
+            intersection = self.__get_intersection(assignments)
             if intersection != []:
                 answer += 1
         return answer
