@@ -61,7 +61,7 @@ class Day:
 
     def __solve(self, input, own_shape_getter):
         total_score = 0
-        for line in input.splitlines():
+        for line in input:
             score = self.__calculate_score(line.split(), own_shape_getter)
             total_score += score
 

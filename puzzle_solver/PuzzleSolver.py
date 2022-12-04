@@ -48,7 +48,7 @@ class PuzzleSolver(object):
 
     def __test(self, solver, expected_answer):
         if solver != None and expected_answer != None:
-            answer = solver(self.puzzle.example_data)
+            answer = solver(self.puzzle.example_data.splitlines())
             if answer == expected_answer:
                 print(Fore.GREEN + 'PASSED' + Fore.RESET)
                 return True
@@ -78,7 +78,7 @@ class PuzzleSolver(object):
         elif solver == None:
             print(Fore.YELLOW + 'no solver' + Fore.RESET)
         else:
-            answer = solver(self.puzzle.input_data)
+            answer = solver(self.puzzle.input_data.splitlines())
             print(f'{answer}')
             return answer
         return None

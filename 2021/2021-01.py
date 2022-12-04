@@ -12,8 +12,8 @@ class Day:
             .solve()\
             .submit(do_submit=True)
 
-    def solve_a(self, input: str):
-        depths = list(map(int, input.splitlines()))
+    def solve_a(self, input: list[str]):
+        depths = list(map(int, input))
         return self.__find_increases(depths)
 
     def __find_increases(self, depths):
@@ -23,8 +23,8 @@ class Day:
                 answer += 1
         return answer
 
-    def solve_b(self, input: str):
-        depths = list(map(int, input.splitlines()))
+    def solve_b(self, input: list[str]):
+        depths = list(map(int, input))
         groups = []
         for i in range(2, len(depths)):
             groups.append(depths[i] + depths[i-1] + depths[i-2])

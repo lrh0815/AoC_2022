@@ -8,11 +8,11 @@ class Day03:
             .with_expected_b(70)\
             .test()\
             .solve()\
-            .submit(do_submit=True)
+            .submit(do_submit=False)
 
-    def solve_a(self, input: str):
+    def solve_a(self, input: list[str]):
         answer = 0
-        for rucksack in input.splitlines():
+        for rucksack in input:
             comp1 = list(rucksack[0:len(rucksack)//2])
             comp2 = list(rucksack[len(rucksack)//2:])
             common = list(set([value for value in comp1 if value in comp2]))[0]
@@ -26,9 +26,9 @@ class Day03:
             prio += 58
         return prio
 
-    def solve_b(self, input: str):
+    def solve_b(self, input: list[str]):
         answer = 0
-        rucksacks = input.splitlines()
+        rucksacks = input
         groups = list(self.__get_groups(rucksacks))
         for group in groups:
             common = list(set([value for value in group[0]

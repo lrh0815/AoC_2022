@@ -22,7 +22,7 @@ class Day:
 
     def __read_calories_per_elf(self, input):
         calories_per_elf = [0]
-        for calories in input.splitlines():
+        for calories in input:
             if calories == "":
                 calories_per_elf.append(0)
             else:

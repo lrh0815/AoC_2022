@@ -12,7 +12,7 @@ class Day:
             .solve()\
             .submit(do_submit=True)
 
-    def solve_a(self, input: str):
+    def solve_a(self, input: list[str]):
         course = self.__get_course(input)
         hor = 0
         dep = 0
@@ -24,7 +24,7 @@ class Day:
 
     def __get_course(self, input):
         course = list(map(lambda y: (y[0], int(y[1])), list(
-            map(lambda x: x.split(), input.splitlines()))))
+            map(lambda x: x.split(), input))))
         return course
 
     __ops = {
@@ -33,7 +33,7 @@ class Day:
         'up': (0, -1, 0)
     }
 
-    def solve_b(self, input: str):
+    def solve_b(self, input: list[str]):
         course = self.__get_course(input)
         aim = 0
         hor = 0

@@ -1,23 +1,22 @@
-import sys
-sys.path.append('c:\\code\AoC_2022')
 from puzzle_solver.PuzzleSolver import PuzzleSolver
 
 
 class Day:
     def run(self):
-        PuzzleSolver(2021, 3, self.solve_a, self.solve_b, True)\
-            .with_expected_a(198)\
+        PuzzleSolver(2022, 5, self.solve_a, self.solve_b)\
+            .with_expected_a(None)\
             .with_expected_b(None)\
             .test()\
             .solve()\
             .submit(do_submit=True)
 
     def solve_a(self, input: list[str]):
-        print(input)
-        return None
+        answer = None
+        return answer
 
     def solve_b(self, input: list[str]):
-        return None
+        answer = None
+        return answer
 
 
 if __name__ == "__main__":
