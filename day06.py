@@ -17,8 +17,8 @@ class Day06Solver(PuzzleSolver):
         return i
 
     def solve_b(self, input: list[str]):
-        line = input[0]
-        return self.__find_unique_char_sequence(14, line)
+        datastream = input[0]
+        return self.__find_unique_char_sequence(14, datastream)
 
 
 if __name__ == "__main__":
