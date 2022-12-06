@@ -29,14 +29,6 @@ class AoCHelper(object):
         self.solutions = {'a': None, 'b': None}
         self.submitters = {'a': self.__submit_a, 'b': self.__submit_b}
 
-    def with_expected_a(self, expected_answer):
-        self.expected_answers['a'] = expected_answer
-        return self
-
-    def with_expected_b(self, expected_answer):
-        self.expected_answers['b'] = expected_answer
-        return self
-
     def print_input(self):
         print(self.puzzle.input_data)
         return self
@@ -52,19 +44,29 @@ class AoCHelper(object):
             parts = [part]
         return parts
 
-    def test(self, part=None):
+    def test_with(self, part, input: list[str], expected_answer):
         print()
-        for part in self.__get_parts(part):
-            self.test_results[part] = self.__test_for_part(part)
+        self.__test_for_part(part, input, expected_answer)
         return self
 
-    def __test_for_part(self, part):
-        print(f'Test {part}: ', end='')
-        return self.__test(self.puzzle_solver.solvers[part], self.puzzle_solver.example_answers[part])
+    def test(self, part=None):
+        print()
+        input = self.puzzle.example_data.splitlines()
+        for part in self.__get_parts(part):
+            self.__test_for_part(part, input, self.puzzle_solver.example_answers[part])
+        return self
 
-    def __test(self, solver, expected_answer):
+    def __test_for_part(self, part, input, expected_answer):
+        print(f'Test {part}: ', end='')
+        result = self.__test(self.puzzle_solver.solvers[part], input, expected_answer)
+        if self.test_results[part] == None:
+            self.test_results[part] = result
+        else:
+            self.test_results[part] = self.test_results[part] and result
+
+    def __test(self, solver, input, expected_answer):
         if solver != None and expected_answer != None:
-            answer = solver(self.puzzle.example_data.splitlines())
+            answer = solver(input)
             if answer == expected_answer:
                 print(Fore.GREEN + 'PASSED' + Fore.RESET)
                 return True
