@@ -31,29 +31,7 @@ class Day7Solver(PuzzleSolver):
         PuzzleSolver.__init__(self, 2022, 7, 95437, None, False)
 
     def solve_a(self, input: list[str]):
-        self.dirs = {}
-        self.current_dir = None
-        for line in map(lambda x: x.split(), input):
-            if line[0] == "$":
-                if line[1] == "cd":
-                    if line[2] == "..":
-                        if self.current_dir != "/":
-                            self.current_dir = self.dirs[self.current_dir][1]
-                    else:
-                        if line[2] != "/":
-                            dirname = self.dirs[self.current_dir][0] + "/" + line[2]
-                        else:
-                            dirname = line[2]
-                        if not dirname in self.dirs.keys():
-                            self.dirs[dirname] = [dirname, self.current_dir, 0, set(), 0]
-                        self.current_dir = dirname
-                elif line[1] == "ls":
-                    self.dirs[self.current_dir][2] = 0
-            elif line[0] == "dir":
-                self.dirs[self.current_dir][3].add(self.dirs[self.current_dir][0] + "/" + line[1])
-            else:
-                self.dirs[self.current_dir][2] += int(line[0])
-
+        self.__create_dirs(input)
         self.__update_subsize(self.dirs["/"])
 
         total = 0
@@ -64,6 +42,30 @@ class Day7Solver(PuzzleSolver):
 
         return total
 
+    def __create_dirs(self, input):
+        self.dirs = {"/" : ["/", None, 0, set(), 0]}
+        current_dir = None
+        for line in map(lambda x: x.split(), input):
+            if line[0] == "$":
+                if line[1] == "cd":
+                    if line[2] == "..":
+                        if current_dir[1] != None:
+                            current_dir = self.dirs[current_dir[1]]
+                    else:
+                        if line[2] != "/":
+                            dirname = current_dir[0] + "/" + line[2]
+                        else:
+                            dirname = line[2]
+                        if not dirname in self.dirs.keys():
+                            self.dirs[dirname] = [dirname, current_dir[0], 0, set(), 0]
+                        current_dir = self.dirs[dirname]
+                elif line[1] == "ls":
+                    current_dir[2] = 0
+            elif line[0] == "dir":
+                current_dir[3].add(current_dir[0] + "/" + line[1])
+            else:
+                current_dir[2] += int(line[0])
+
     def __update_subsize(self, dir):
         for subdir in dir[3]:
             self.__update_subsize(self.dirs[subdir])
@@ -71,7 +73,9 @@ class Day7Solver(PuzzleSolver):
             self.dirs[dir[1]][4] += dir[2] + dir[4]
 
     def solve_b(self, input: list[str]):
-        self.solve_a(input)
+        self.__create_dirs(input)
+        self.__update_subsize(self.dirs["/"])
+
         total_space = 70000000
         required_free = 30000000
         current_free = total_space - (self.dirs["/"][2] + self.dirs["/"][4])
