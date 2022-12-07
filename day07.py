@@ -25,10 +25,11 @@ $ ls
 5626152 d.ext
 7214296 k"""
 
+
 class DirEntry(object):
-    def __init__(self, name: str, parentname: str):
-        self.name = name
-        self.parentname = parentname
+    def __init__(self, path: str, parent: "DirEntry"):
+        self.path = path
+        self.parent = parent
         self.size = 0
         self.sub_dir_size = 0
         self.sub_dirs = set()
@@ -36,6 +37,7 @@ class DirEntry(object):
     @property
     def total_size(self):
         return self.size + self.sub_dir_size
+
 
 class Day7Solver(PuzzleSolver):
     def __init__(self):
@@ -53,34 +55,41 @@ class Day7Solver(PuzzleSolver):
         return total_size
 
     def __create_dirs(self, input):
-        self.dirs = {"/" : DirEntry("/", None)}
+        self.dirs = {"/": DirEntry("/", None)}
         current_dir = None
         for line in map(lambda x: x.split(), input):
             if line[0] == "$":
                 if line[1] == "cd":
                     if line[2] == "..":
-                        if current_dir.parentname != None:
-                            current_dir = self.dirs[current_dir.parentname]
+                        if current_dir.parent != None:
+                            current_dir = current_dir.parent
                     else:
-                        if line[2] != "/":
-                            dirname = current_dir.name + "/" + line[2]
+                        if line[2] == "/":
+                            current_dir = self.dirs["/"]
                         else:
-                            dirname = line[2]
-                        if not dirname in self.dirs.keys():
-                            self.dirs[dirname] = DirEntry(dirname, current_dir.name)
-                        current_dir = self.dirs[dirname]
+                            current_dir = self.__get_or_add_entry(current_dir, line[2])
                 elif line[1] == "ls":
                     current_dir.size = 0
             elif line[0] == "dir":
-                current_dir.sub_dirs.add(current_dir.name + "/" + line[1])
+                self.__get_or_add_entry(current_dir, line[1])
             else:
                 current_dir.size += int(line[0])
 
+    def __get_or_add_entry(self, current_dir: DirEntry, dirname):
+        path = current_dir.path + "/" + dirname
+        if not path in self.dirs.keys():
+            dir_entry = DirEntry(path, current_dir)
+            current_dir.sub_dirs.add(dir_entry)
+            self.dirs[path] = dir_entry
+            return dir_entry
+        else:
+            return self.dirs[path]
+
     def __update_subdir_size(self, dir: DirEntry):
         for subdir in dir.sub_dirs:
-            self.__update_subdir_size(self.dirs[subdir])
-        if dir.parentname != None:
-            self.dirs[dir.parentname].sub_dir_size += dir.total_size
+            self.__update_subdir_size(subdir)
+        if dir.parent != None:
+            dir.parent.sub_dir_size += dir.total_size
 
     def solve_b(self, input: list[str]):
         self.__create_dirs(input)
