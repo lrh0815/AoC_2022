@@ -1,7 +1,7 @@
 from aoc_helper.AoCHelper import PuzzleSolver, AoCHelper
 
 
-class Day(PuzzleSolver):
+class DaySolver(PuzzleSolver):
     def __init__(self):
         PuzzleSolver.__init__(self, 2022, 0, None, None, True)
 
@@ -14,4 +14,4 @@ class Day(PuzzleSolver):
 
 
 if __name__ == "__main__":
-    AoCHelper(Day()).test().solve().submit()
+    AoCHelper(DaySolver()).test().solve().submit()
