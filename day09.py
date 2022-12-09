@@ -9,8 +9,8 @@ class Day9Solver(PuzzleSolver):
         return self.simulate_rope(input, 2)
 
     def simulate_rope(self, input, num_knots):
-        self.x = [0 for i in range(0, num_knots)]
-        self.y = [0 for i in range(0, num_knots)]
+        self.x = [0] * num_knots
+        self.y = [0] * num_knots
         self.tail_positions = {(0, 0)}
 
         for line in input:
@@ -38,49 +38,27 @@ class Day9Solver(PuzzleSolver):
         self.tail_positions.add((self.x[-1], self.y[-1]))
 
     def adjust_tail(self, t):
-        match (self.x[t] - self.x[t-1], self.y[t] - self.y[t-1]):
-            case (-2, -2):
-                self.y[t] += 1
-                self.x[t] += 1
-            case (-1, -2):
-                self.y[t] += 1
-                self.x[t] += 1
+        delta_x = self.x[t] - self.x[t-1]
+        delta_y = self.y[t] - self.y[t-1]
+        match (delta_x, delta_y):
             case (0, -2):
                 self.y[t] += 1
-            case (1, -2):
-                self.y[t] += 1
-                self.x[t] -= 1
-            case (2, -2):
-                self.y[t] += 1
-                self.x[t] -= 1
-            case (-2, -1):
-                self.y[t] += 1
-                self.x[t] += 1
-            case (2, -1):
-                self.y[t] += 1
-                self.x[t] -= 1
+            case (0, 2):
+                self.y[t] -= 1
             case (-2, 0):
                 self.x[t] += 1
             case (2, 0):
                 self.x[t] -= 1
-            case (-2, 1):
-                self.y[t] -= 1
+            case (-2, -2) | (-1, -2) | (-2, -1):
+                self.y[t] += 1
                 self.x[t] += 1
-            case (2, 1):
-                self.y[t] -= 1
+            case (1, -2) | (2, -2) | (2, -1):
+                self.y[t] += 1
                 self.x[t] -= 1
-            case (-2, 2):
+            case (-2, 1) | (-2, 2) | (-1, 2):
                 self.y[t] -= 1
                 self.x[t] += 1
-            case (-1, 2):
-                self.y[t] -= 1
-                self.x[t] += 1
-            case (0, 2):
-                self.y[t] -= 1
-            case (1, 2):
-                self.y[t] -= 1
-                self.x[t] -= 1
-            case (2, 2):
+            case (2, 1) | (1, 2) | (2, 2):
                 self.y[t] -= 1
                 self.x[t] -= 1
 
