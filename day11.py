@@ -10,11 +10,27 @@ def chunk_input(input, size):
 class Monkey(object):
     def __init__(self, items: list[int], operation: list[str], test_value: int, true_target: int, false_target: int):
         self.items = items
-        self.operation = operation
+        self.operation = self.__convert_operation(operation)
         self.test_value = test_value
         self.true_target = true_target
         self.false_target = false_target
         self.num_inspections = 0
+
+    def __convert_operation(self, op: list[str]):
+        if op[2] != "old":
+            self.second_operand_value = int(op[2])
+        else:
+            self.second_operand_value = None
+        if op[1] == "+":
+            return self.__add
+        else:
+            return self.__multiply
+
+    def __add(self, old: int):
+        return old + (self.second_operand_value or old)
+
+    def __multiply(self, old: int):
+        return old * (self.second_operand_value or old)
 
     def __str__(self):
         return f"{self.items}, {self.operation}, {self.test_value}, {self.true_target}, {self.false_target}, {self.num_inspections}"
@@ -30,16 +46,7 @@ class Monkey(object):
 
     def __inspect(self, item: int, worry_divider: int, common_factor: int):
         self.num_inspections += 1
-        if self.operation[2] == "old":
-            x = item
-        else:
-            x = int(self.operation[2])
-
-        if self.operation[1] == "+":
-            item = item + x
-        else:
-            item = item * x
-
+        item = self.operation(item)
         item = trunc(item / worry_divider)
         item = item - (trunc(item / common_factor) * common_factor)
         return item
