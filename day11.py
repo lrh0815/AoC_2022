@@ -68,17 +68,17 @@ class DaySolver(PuzzleSolver):
         return self.__solve(input, 10000, 1)
 
     def __solve(self, input, rounds: int, worry_divider: int):
-        self.monkeys = [Monkey(monkey_spec) for monkey_spec in chunk_input(input, 7)]
+        monkeys = [Monkey(monkey_spec) for monkey_spec in chunk_input(input, 7)]
 
         common_factor = 1
-        for monkey in self.monkeys:
+        for monkey in monkeys:
             common_factor *= monkey.test_value
 
         for _ in range(rounds):
-            for monkey in self.monkeys:
-                monkey.inspect_and_throw(self.monkeys, worry_divider, common_factor)
+            for monkey in monkeys:
+                monkey.inspect_and_throw(monkeys, worry_divider, common_factor)
 
-        inspections = [x.num_inspections for x in self.monkeys]
+        inspections = [x.num_inspections for x in monkeys]
         inspections.sort()
 
         answer = inspections[-1] * inspections[-2]
