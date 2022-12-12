@@ -3,25 +3,19 @@ from aoc_helper.AoCHelper import PuzzleSolver, AoCHelper
 
 class DaySolver(PuzzleSolver):
     def __init__(self):
-        PuzzleSolver.__init__(self, 2022, 12, 31, None, True)
+        PuzzleSolver.__init__(self, 2022, 12, 31, 29, True)
 
     def solve_a(self, input: list[str]):
         self.grid = input
-        self.start = self.__find_start()
-        self.dest = self.__find_dest()
-        return self.__find_paths()
-
-    def __find_start(self):
-        return self.__find("S")
-
-    def __find_dest(self):
-        return self.__find("E")
+        start = list(self.__find("S"))
+        self.dest = list(self.__find("E"))[0]
+        return self.__find_paths(start[0], None)
 
     def __find(self, char):
         for y in range(len(self.grid)):
             for x in range(len(self.grid[0])):
                 if self.grid[y][x] == char:
-                    return (x, y)
+                    yield (x, y)
 
     def __height_at(self, pos):
         match self.grid[pos[1]][pos[0]]:
@@ -32,9 +26,8 @@ class DaySolver(PuzzleSolver):
             case c:
                 return ord(c) - ord("a")
 
-    def __find_paths(self):
-        queue = [(self.start, [])]
-        min_path_len = None
+    def __find_paths(self, start, min_path_len):
+        queue = [(start, [])]
         visited = {}
 
         while True:
@@ -43,15 +36,18 @@ class DaySolver(PuzzleSolver):
 
             item = queue.pop()
             pos = item[0]
+
+            if pos == start:
+                continue
+
             path = item[1]
             path_len = len(path)
+            if min_path_len != None and path_len >= min_path_len:
+                continue
+
             if pos == self.dest:
                 if min_path_len == None or path_len < min_path_len:
                     min_path_len = path_len
-                    min_path = path
-                continue
-
-            if min_path_len != None and path_len >= min_path_len:
                 continue
 
             for direction in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
@@ -66,12 +62,22 @@ class DaySolver(PuzzleSolver):
                         elif visited[next_pos] > path_len + 1:
                             visited[next_pos] = path_len + 1
                             queue.append((next_pos, path + [(next_pos, next_height)]))
-
-        print(min_path)
         return min_path_len
 
     def solve_b(self, input: list[str]):
-        return None
+        self.grid = [line.replace("S", "a") for line in input]
+        self.dest = list(self.__find("E"))[0]
+        min_path_len = None
+        starts = list(self.__find("a"))
+        print(len(starts))
+        i = 0
+        for start in starts:
+            path_len = self.__find_paths(start, min_path_len)
+            if min_path_len == None or path_len < min_path_len:
+                min_path_len = path_len
+            i += 1
+            print(f"{i}/{len(starts)}: {start} = {min_path_len}")
+        return min_path_len
 
 
 example_input1 = """"""
@@ -80,5 +86,5 @@ example_input2 = """"""
 
 if __name__ == "__main__":
     AoCHelper(DaySolver())\
-        .test()\
-        .solve().submit()
+        .test("b")\
+        .solve("b").submit()
