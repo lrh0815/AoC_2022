@@ -6,10 +6,12 @@ class DaySolver(PuzzleSolver):
         PuzzleSolver.__init__(self, 2022, 12, 31, 29, True)
 
     def solve_a(self, input: list[str]):
-        self.grid = input
-        start = list(self.__find("S"))
-        self.dest = list(self.__find("E"))[0]
-        return self.__find_paths(start[0], None)
+        self.grid = self.__create_grid(input)
+        start = list(self.__find(ord("S")-ord("a")))[0]
+        self.dest = list(self.__find(ord("E")-ord("a")))[0]
+        self.grid[start[1]][start[0]] = 0
+        self.grid[self.dest[1]][self.dest[0]] = ord("z") - ord("a")
+        return self.__find_paths(start, None)
 
     def __find(self, char):
         for y in range(len(self.grid)):
@@ -18,18 +20,11 @@ class DaySolver(PuzzleSolver):
                     yield (x, y)
 
     def __height_at(self, pos):
-        match self.grid[pos[1]][pos[0]]:
-            case "S":
-                return 0
-            case "E":
-                return ord("z") - ord("a")
-            case c:
-                return ord(c) - ord("a")
+        return self.grid[pos[1]][pos[0]]
 
     def __find_paths(self, start, min_path_len):
         queue = [(start, [])]
         visited = {}
-
         while True:
             if len(queue) == 0:
                 break
@@ -37,7 +32,7 @@ class DaySolver(PuzzleSolver):
             item = queue.pop()
             pos = item[0]
 
-            if pos == start:
+            if pos == start and len(queue) > 0:
                 continue
 
             path = item[1]
@@ -64,11 +59,18 @@ class DaySolver(PuzzleSolver):
                             queue.append((next_pos, path + [(next_pos, next_height)]))
         return min_path_len
 
+    def __create_grid(self, input: list[str]):
+        grid = []
+        for line in input:
+            grid.append([(ord(x) - ord("a")) for x in line])
+        return grid
+
     def solve_b(self, input: list[str]):
-        self.grid = [line.replace("S", "a") for line in input]
-        self.dest = list(self.__find("E"))[0]
+        self.grid = self.__create_grid([line.replace("S", "a") for line in input])
+        self.dest = list(self.__find(ord("E")-ord("a")))[0]
+        self.grid[self.dest[1]][self.dest[0]] = ord("z") - ord("a")
         min_path_len = None
-        starts = list(self.__find("a"))
+        starts = list(self.__find(0))
         print(len(starts))
         i = 0
         for start in starts:
@@ -76,7 +78,7 @@ class DaySolver(PuzzleSolver):
             if min_path_len == None or path_len < min_path_len:
                 min_path_len = path_len
             i += 1
-            print(f"{i}/{len(starts)}: {start} = {min_path_len}")
+            print(f"{i}/{len(starts)}: {start}, {min_path_len}")
         return min_path_len
 
 
@@ -86,5 +88,5 @@ example_input2 = """"""
 
 if __name__ == "__main__":
     AoCHelper(DaySolver())\
-        .test("b")\
-        .solve("b").submit()
+        .test()\
+        .solve()
