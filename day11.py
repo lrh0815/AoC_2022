@@ -1,10 +1,5 @@
-from aoc_helper.AoCHelper import PuzzleSolver, AoCHelper
+from aoc_helper.AoCHelper import *
 from math import trunc
-
-
-def chunk_input(input, size):
-    for i in range(0, len(input), size):
-        yield input[i:i+size]
 
 
 class Monkey(object):

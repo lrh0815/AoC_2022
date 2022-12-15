@@ -1,6 +1,69 @@
 from aocd.models import Puzzle
 from colorama import Fore
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
+
+
+def chunk_input(input, size):
+    for i in range(0, len(input), size):
+        yield input[i:i+size]
+
+
+def sign(n):
+    if n < 0:
+        return -1
+    elif n > 0:
+        return 1
+    else:
+        0
+
+
+@dataclass(frozen=True)
+class Point(object):
+    x: int
+    y: int
+
+
+class Grid(object):
+    def __init__(self, default_value=None):
+        self.default_value = default_value
+        self.__grid = {}
+
+    def set(self, point: Point, value):
+        self.__grid[point] = value
+
+    def get(self, point: Point):
+        return self.__grid.get(point, self.default_value)
+
+    def min_x(self):
+        return min([k.x for k in self.__grid.keys()])
+
+    def max_x(self):
+        return max([k.x for k in self.__grid.keys()])
+
+    def min_y(self):
+        return min([k.y for k in self.__grid.keys()])
+
+    def max_y(self):
+        return max([k.y for k in self.__grid.keys()])
+
+    def print_grid(self, min_x=None, max_x=None, min_y=None, max_y=None):
+        min_x = self.min_x() - 1 if min_x == None else min_x
+        max_x = self.max_x() + 2 if max_x == None else max_x
+        min_y = self.min_y() if min_y == None else min_y
+        max_y = self.max_y() + 3 if max_y == None else max_y
+        print("    ", end="")
+        for x in range(min_x, max_x + 1):
+            if x % 5 == 0:
+                print(f"{x%10}", end="")
+            else:
+                print(" ", end="")
+
+        for y in range(min_y, max_y + 1):
+            print()
+            print(f"{y:3} ", end="")
+            for x in range(min_x, max_x + 1):
+                print(self.get(Point(x, y)), end="")
 
 
 class PuzzleSolver(ABC):

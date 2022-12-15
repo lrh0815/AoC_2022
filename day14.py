@@ -1,13 +1,4 @@
-from aoc_helper.AoCHelper import PuzzleSolver, AoCHelper
-
-
-def sign(n):
-    if n < 0:
-        return -1
-    elif n > 0:
-        return 1
-    else:
-        0
+from aoc_helper.AoCHelper import *
 
 
 class DaySolver(PuzzleSolver):
