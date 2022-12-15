@@ -75,12 +75,13 @@ class DaySolver(PuzzleSolver):
     def solve_a(self, input: list[str]):
         self.__read_input(input)
         y = 10 if self.grid.max_y() < 100 else 2000000
-        cov = {x for sensor_info in self.sensors for x in self.__sensor_line_coverage(sensor_info, y) if self.grid.get(Point(x, y)) != "B"}
+        print()
+        cov = {x for sensor_index in range(len(self.sensors)) for x in self.__sensor_line_coverage(sensor_index, y) if self.grid.get(Point(x, y)) != "B"}
         return len(cov)
 
-    def __sensor_line_coverage(self, sensor_info, line: int):
-        sensor = sensor_info[0]
-        radius = sensor_info[1]
+    def __sensor_line_coverage(self, sensor_index: int, line: int):
+        print(f"{sensor_index}/{len(self.sensors)}")
+        sensor, radius = self.sensors[sensor_index]
         line_delta = abs(line - sensor.y)
         if line_delta > radius:
             return []
