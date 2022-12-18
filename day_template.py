@@ -1,4 +1,6 @@
-from aoc_helper.AoCHelper import PuzzleSolver, AoCHelper
+from aoc_helper.AoCHelper import *
+import re
+from dataclasses import dataclass
 
 
 class DaySolver(PuzzleSolver):

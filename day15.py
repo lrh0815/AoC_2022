@@ -23,7 +23,7 @@ class DaySolver(PuzzleSolver):
 
     def solve_a(self, input: list[str]):
         self.__read_input(input)
-        y = 10 if self.grid.max_y() < 100 else 2000000
+        y = 10 if self.grid.max_y < 100 else 2000000
         print()
         cov = {x for sensor_index in range(len(self.sensors)) for x in self.__sensor_line_coverage(sensor_index, y) if self.grid.get(Point(x, y)) != "B"}
         return len(cov)
@@ -38,7 +38,7 @@ class DaySolver(PuzzleSolver):
 
     def solve_b(self, input: list[str]):
         self.__read_input(input)
-        max = 20 if self.grid.max_y() < 100 else 4000000
+        max = 20 if self.grid.max_y < 100 else 4000000
         print()
         for i in range(len(self.sensors)):
             print(f"{i}/{len(self.sensors)}")

@@ -2,6 +2,7 @@ from aocd.models import Puzzle
 from colorama import Fore
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from typing import Optional
 
 
 def chunk_input(input, size):
@@ -18,10 +19,20 @@ def sign(n):
         0
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True,)
 class Point(object):
     x: int
     y: int
+    z: Optional[int] = 0
+
+    def __add__(self, o):
+        if type(o) is Point:
+            return Point(self.x + o.x, self.y+o.y, self.z+o.z)
+        if type(o) is tuple:
+            if len(o) == 2:
+                return Point(self.x + o[0], self.y+o[1])
+            if len(o) == 3:
+                return Point(self.x + o[0], self.y+o[1], self.z+o[2])
 
 
 class Grid(object):
@@ -35,35 +46,58 @@ class Grid(object):
     def get(self, point: Point):
         return self.__grid.get(point, self.default_value)
 
-    def min_x(self):
+    @property
+    def min_x(self) -> int:
         return min([k.x for k in self.__grid.keys()])
 
-    def max_x(self):
+    @property
+    def max_x(self) -> int:
         return max([k.x for k in self.__grid.keys()])
 
-    def min_y(self):
+    @property
+    def min_y(self) -> int:
         return min([k.y for k in self.__grid.keys()])
 
-    def max_y(self):
+    @property
+    def max_y(self) -> int:
         return max([k.y for k in self.__grid.keys()])
 
-    def print_grid(self, min_x=None, max_x=None, min_y=None, max_y=None):
-        min_x = self.min_x() - 1 if min_x == None else min_x
-        max_x = self.max_x() + 2 if max_x == None else max_x
-        min_y = self.min_y() if min_y == None else min_y
-        max_y = self.max_y() + 3 if max_y == None else max_y
-        print("    ", end="")
-        for x in range(min_x, max_x + 1):
-            if x % 5 == 0:
-                print(f"{x%10}", end="")
-            else:
-                print(" ", end="")
+    @property
+    def min_z(self) -> int:
+        return min([k.z for k in self.__grid.keys()])
 
-        for y in range(min_y, max_y + 1):
-            print()
-            print(f"{y:3} ", end="")
+    @property
+    def max_z(self) -> int:
+        return max([k.z for k in self.__grid.keys()])
+
+    def all_set_points(self):
+        return self.__grid.keys()
+
+    def contains(self, point: Point):
+        return self.min_x <= point.x <= self.max_x and self.min_y <= point.y <= self.max_y and self.min_z <= point.z <= self.max_z
+
+    def print_grid(self, min_x=None, max_x=None, min_y=None, max_y=None, min_z=None, max_z=None):
+        min_x = self.min_x if min_x == None else min_x
+        max_x = self.max_x if max_x == None else max_x
+        min_y = self.min_y if min_y == None else min_y
+        max_y = self.max_y if max_y == None else max_y
+        min_z = self.min_z if min_z == None else min_z
+        max_z = self.max_z if max_z == None else max_z
+        for z in range(min_z, max_z+1):
+            print(f"z = {z}")
+            print("    ", end="")
             for x in range(min_x, max_x + 1):
-                print(self.get(Point(x, y)), end="")
+                if x % 5 == 0:
+                    print(f"{x%10}", end="")
+                else:
+                    print(" ", end="")
+
+            for y in range(min_y, max_y + 1):
+                print()
+                print(f"{y:3} ", end="")
+                for x in range(min_x, max_x + 1):
+                    print(self.get(Point(x, y, z)), end="")
+            print()
 
 
 class PuzzleSolver(ABC):
