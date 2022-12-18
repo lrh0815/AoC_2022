@@ -73,8 +73,8 @@ class Grid(object):
     def max_z(self) -> int:
         return max([k.z for k in self.__grid.keys()])
 
-    def all_set_points(self):
-        return self.__grid.keys()
+    def all_set_points(self) -> list[Point]:
+        return [p for p in self.__grid.keys()]
 
     def contains(self, point: Point):
         return self.min_x <= point.x <= self.max_x and self.min_y <= point.y <= self.max_y and self.min_z <= point.z <= self.max_z
