@@ -43,6 +43,9 @@ class Grid(object):
     def set(self, point: Point, value):
         self.__grid[point] = value
 
+    def reset(self, point: Point):
+        return self.__grid.pop(point, self.default_value)
+
     def get(self, point: Point):
         return self.__grid.get(point, self.default_value)
 
@@ -92,7 +95,7 @@ class Grid(object):
                 else:
                     print(" ", end="")
 
-            for y in range(min_y, max_y + 1):
+            for y in range(max_y, -1, -1):
                 print()
                 print(f"{y:3} ", end="")
                 for x in range(min_x, max_x + 1):
