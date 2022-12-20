@@ -157,7 +157,7 @@ class AoCHelper(object):
         return self
 
     def __test_for_part(self, part, input, expected_answer):
-        print(f'Test {part}: ', end='')
+        print(f'Test {part}: ')
         result = self.__test(self.puzzle_solver.solvers[part], input, expected_answer)
         if self.test_results[part] == None:
             self.test_results[part] = result
@@ -185,7 +185,7 @@ class AoCHelper(object):
         return self
 
     def __solve_for_part(self, part):
-        print(f'Solve {part}: ', end='')
+        print(f'Solve {part}: ')
         return self.__solve(self.test_results[part], self.puzzle_solver.solvers[part])
 
     def __solve(self, test_result: bool, solver):
