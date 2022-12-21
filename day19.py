@@ -80,7 +80,7 @@ class State(object):
 
     def build_geode_bot(self, blueprint: Blueprint):
         self.geode_bots += 1
-        self.geodes += self.minutes_left 
+        self.geodes += self.minutes_left
         self.resources -= blueprint.geode_bot_costs
         return self
 
@@ -95,16 +95,16 @@ class DaySolver(PuzzleSolver):
         qualitiy_levels = []
         for blueprint in blueprints:
             print(f"{blueprint.id:3}/{len(blueprints)}")
-            num_geodes = self.__simulate_blueprint(blueprint)
+            num_geodes = self.__simulate_blueprint(blueprint, 24)
             quality_level = blueprint.id * num_geodes
             qualitiy_levels.append(quality_level)
 
         answer = sum(qualitiy_levels)
         return answer
 
-    def __simulate_blueprint(self, blueprint: Blueprint) -> int:
+    def __simulate_blueprint(self, blueprint: Blueprint, total_minutes: int) -> int:
 
-        initial_state = State(Resources(1, 0, 0), Resources(0, 0, 0), 24, 0, 0)
+        initial_state = State(Resources(1, 0, 0), Resources(0, 0, 0), total_minutes, 0, 0)
         queue = [initial_state]
 
         max_geode_state = initial_state
@@ -116,33 +116,44 @@ class DaySolver(PuzzleSolver):
             if state.geodes + (state.minutes_left * (state.minutes_left - 1) / 2) < max_geode_state.geodes:
                 continue
             if state.minutes_left > 2:
-                if state.robots.obsidian > 0:
+                if state.robots.ore >= blueprint.geode_bot_costs.ore and state.robots.obsidian >= blueprint.geode_bot_costs.obsidian:
                     next_state = state.after_minutes(0)
-                    while next_state.resources - blueprint.geode_bot_costs < 0 and next_state.minutes_left > 1:
-                        next_state = next_state.after_minutes(1)
-                    next_state = next_state.after_minutes(1).build_geode_bot(blueprint)
+                    while next_state.minutes_left > 0:
+                        next_state = next_state.after_minutes(1).build_geode_bot(blueprint)
                     queue.append(next_state)
-                if state.robots.obsidian < blueprint.max_obsidian_cost and state.robots.clay > 0:
-                    next_state = state.after_minutes(0)
-                    while next_state.resources - blueprint.obsidian_bot_costs < 0 and next_state.minutes_left > 1:
-                        next_state = next_state.after_minutes(1)
-                    next_state = next_state.after_minutes(1).build_obsidian_bot(blueprint)
-                    queue.append(next_state)
-                if state.robots.clay < blueprint.max_clay_cost:
-                    next_state = state.after_minutes(0)
-                    while next_state.resources - blueprint.clay_bot_costs < 0 and next_state.minutes_left > 1:
-                        next_state = next_state.after_minutes(1)
-                    next_state = next_state.after_minutes(1).build_clay_bot(blueprint)
-                    queue.append(next_state)
-                if state.robots.ore < blueprint.max_ore_cost:
-                    next_state = state.after_minutes(0)
-                    while next_state.resources - blueprint.ore_bot_costs < 0 and next_state.minutes_left > 1:
-                        next_state = next_state.after_minutes(1)
-                    next_state = next_state.after_minutes(1).build_ore_bot(blueprint)
-                    queue.append(next_state)
+                else:
+                    if state.robots.obsidian > 0:
+                        next_state = state.after_minutes(0)
+                        while next_state.resources - blueprint.geode_bot_costs < 0 and next_state.minutes_left > 1:
+                            next_state = next_state.after_minutes(1)
+                        next_state = next_state.after_minutes(1).build_geode_bot(blueprint)
+                        queue.append(next_state)
+                    if state.robots.obsidian < blueprint.max_obsidian_cost and state.robots.clay > 0:
+                        next_state = state.after_minutes(0)
+                        while next_state.resources - blueprint.obsidian_bot_costs < 0 and next_state.minutes_left > 1:
+                            next_state = next_state.after_minutes(1)
+                        next_state = next_state.after_minutes(1).build_obsidian_bot(blueprint)
+                        queue.append(next_state)
+                    if state.robots.clay < blueprint.max_clay_cost:
+                        next_state = state.after_minutes(0)
+                        while next_state.resources - blueprint.clay_bot_costs < 0 and next_state.minutes_left > 1:
+                            next_state = next_state.after_minutes(1)
+                        next_state = next_state.after_minutes(1).build_clay_bot(blueprint)
+                        queue.append(next_state)
+                    if state.robots.ore < blueprint.max_ore_cost:
+                        next_state = state.after_minutes(0)
+                        while next_state.resources - blueprint.ore_bot_costs < 0 and next_state.minutes_left > 1:
+                            next_state = next_state.after_minutes(1)
+                        next_state = next_state.after_minutes(1).build_ore_bot(blueprint)
+                        queue.append(next_state)
+            queue.sort(key=self.__key, reverse=True)
+            queue = queue[:2000]
         print()
         print(max_geode_state)
         return max_geode_state.geodes
+
+    def __key(self, state: State):
+        return state.geodes * 10000 + state.resources.obsidian * 1000 + state.resources.clay * 100 + state.resources.ore + state.minutes_left
 
     def __read_blueprint(self, line: str):
         id, ore_bot_ores, clay_bot_ores, obsidian_bot_ores, obsidian_bot_clay, geode_bot_ores, geode_bot_obsidian = map(int, re.findall(r"\d+", line))
@@ -153,7 +164,14 @@ class DaySolver(PuzzleSolver):
         return Blueprint(id, ore_bot_costs, clay_bot_costs, obsidian_bot_costs, geode_bot_costs)
 
     def solve_b(self, input: list[str]):
-        return None
+        blueprints = [self.__read_blueprint(line) for line in input]
+
+        answer = 1
+        for blueprint in blueprints[:3]:
+            print(f"{blueprint.id:3}/{len(blueprints)}")
+            num_geodes = self.__simulate_blueprint(blueprint, 32)
+            answer *= num_geodes
+        return answer
 
 
 example_input1 = """Blueprint 1: Each ore robot costs 4 ore. Each clay robot costs 2 ore. Each obsidian robot costs 3 ore and 14 clay. Each geode robot costs 2 ore and 7 obsidian.
@@ -164,5 +182,5 @@ example_input2 = """"""
 if __name__ == "__main__":
     AoCHelper(DaySolver())\
         .test_with('a', example_input1.splitlines(), 33)\
-        .test_with('b', example_input2.splitlines(), None)\
+        .test_with('b', example_input1.splitlines(), 55 * 61)\
         .solve().submit()
