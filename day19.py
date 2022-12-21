@@ -54,14 +54,14 @@ class State(object):
     total_minutes: int
     minutes_used: int
     geodes: int
-    geode_bots: int = 0
+    geode_bots: Optional[int] = 0
 
     @property
     def minutes_left(self):
         return self.total_minutes - self.minutes_used
 
     def after_minutes(self, minutes: int):
-        return State(self.robots * 1, self.resources + self.robots * minutes, self.total_minutes, self.minutes_used + minutes, self.geodes)
+        return State(self.robots * 1, self.resources + self.robots * minutes, self.total_minutes, self.minutes_used + minutes, self.geodes, self.geode_bots)
 
     def build_ore_bot(self, blueprint: Blueprint):
         self.robots.ore += 1
@@ -115,40 +115,31 @@ class DaySolver(PuzzleSolver):
             print(f"{len(queue):5}: {state} {max_geode_state.geodes} ", end="\r")
             if state.geodes + (state.minutes_left * (state.minutes_left - 1) / 2) < max_geode_state.geodes:
                 continue
-            if state.minutes_left > 0:
+            if state.minutes_left > 2:
                 if state.robots.obsidian > 0:
                     next_state = state.after_minutes(0)
                     while next_state.resources - blueprint.geode_bot_costs < 0 and next_state.minutes_left > 1:
                         next_state = next_state.after_minutes(1)
-                    next_state = next_state.build_geode_bot(blueprint).after_minutes(1)
+                    next_state = next_state.after_minutes(1).build_geode_bot(blueprint)
                     queue.append(next_state)
                 if state.robots.obsidian < blueprint.max_obsidian_cost and state.robots.clay > 0:
-                    wait_time = 2
-                    remaining_resources = state.resources - blueprint.obsidian_bot_costs + state.robots
-                    while remaining_resources < 0:
-                        wait_time += 1
-                        remaining_resources = remaining_resources + state.robots
-                    next_state = state.after_minutes(wait_time).build_obsidian_bot(blueprint)
-                    if next_state.minutes_left > 0:
-                        queue.append(next_state)
+                    next_state = state.after_minutes(0)
+                    while next_state.resources - blueprint.obsidian_bot_costs < 0 and next_state.minutes_left > 1:
+                        next_state = next_state.after_minutes(1)
+                    next_state = next_state.after_minutes(1).build_obsidian_bot(blueprint)
+                    queue.append(next_state)
                 if state.robots.clay < blueprint.max_clay_cost:
-                    wait_time = 2
-                    remaining_resources = state.resources - blueprint.clay_bot_costs + state.robots
-                    while remaining_resources < 0:
-                        wait_time += 1
-                        remaining_resources = remaining_resources + state.robots
-                    next_state = state.after_minutes(wait_time).build_clay_bot(blueprint)
-                    if next_state.minutes_left > 0:
-                        queue.append(next_state)
+                    next_state = state.after_minutes(0)
+                    while next_state.resources - blueprint.clay_bot_costs < 0 and next_state.minutes_left > 1:
+                        next_state = next_state.after_minutes(1)
+                    next_state = next_state.after_minutes(1).build_clay_bot(blueprint)
+                    queue.append(next_state)
                 if state.robots.ore < blueprint.max_ore_cost:
-                    wait_time = 2
-                    remaining_resources = state.resources - blueprint.ore_bot_costs + state.robots
-                    while remaining_resources < 0:
-                        wait_time += 1
-                        remaining_resources = remaining_resources + state.robots
-                    next_state = state.after_minutes(wait_time).build_ore_bot(blueprint)
-                    if next_state.minutes_left > 0:
-                        queue.append(next_state)
+                    next_state = state.after_minutes(0)
+                    while next_state.resources - blueprint.ore_bot_costs < 0 and next_state.minutes_left > 1:
+                        next_state = next_state.after_minutes(1)
+                    next_state = next_state.after_minutes(1).build_ore_bot(blueprint)
+                    queue.append(next_state)
         print()
         print(max_geode_state)
         return max_geode_state.geodes
