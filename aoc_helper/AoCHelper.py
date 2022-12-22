@@ -79,7 +79,7 @@ class Grid(object):
     def contains(self, point: Point):
         return self.min_x <= point.x <= self.max_x and self.min_y <= point.y <= self.max_y and self.min_z <= point.z <= self.max_z
 
-    def print_grid(self, min_x=None, max_x=None, min_y=None, max_y=None, min_z=None, max_z=None):
+    def print_grid(self, min_x=None, max_x=None, min_y=None, max_y=None, min_z=None, max_z=None, reverse_y=False):
         min_x = self.min_x if min_x == None else min_x
         max_x = self.max_x if max_x == None else max_x
         min_y = self.min_y if min_y == None else min_y
@@ -91,11 +91,28 @@ class Grid(object):
             print("    ", end="")
             for x in range(min_x, max_x + 1):
                 if x % 5 == 0:
+                    print(f"{(x//100)%10}", end="")
+                else:
+                    print(" ", end="")
+            print()
+            print("    ", end="")
+            for x in range(min_x, max_x + 1):
+                if x % 5 == 0:
+                    print(f"{(x//10)%10}", end="")
+                else:
+                    print(" ", end="")
+            print()
+            print("    ", end="")
+            for x in range(min_x, max_x + 1):
+                if x % 5 == 0:
                     print(f"{x%10}", end="")
                 else:
                     print(" ", end="")
-
-            for y in range(max_y, -1, -1):
+            if reverse_y:
+                y_range = range(min_y, max_y + 1)
+            else:
+                y_range = range(max_y, min_y - 1, -1)
+            for y in y_range:
                 print()
                 print(f"{y:3} ", end="")
                 for x in range(min_x, max_x + 1):
