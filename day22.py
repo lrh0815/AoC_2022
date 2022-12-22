@@ -100,7 +100,7 @@ class DaySolver(PuzzleSolver):
         answer = 1000 * pos.y + 4 * pos.x + directions.index(direction)
         return answer
 
-    def __traverse_edge_part1(self, map: Grid, pos: Point, direction : Direction):
+    def __traverse_edge_part2(self, map: Grid, pos: Point, direction : Direction):
         return pos, direction, True
 
 
