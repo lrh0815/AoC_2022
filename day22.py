@@ -35,23 +35,18 @@ class DaySolver(PuzzleSolver):
         pos = Point(1, 1)
         direction = directions[0]
 
-        while map.get(pos) == " ":
+        while not map.is_set(pos):
             pos += (1, 0)
 
         map.set(pos, direction.symbol)
         for entry in path:
             steps = int(entry[0])
             for _ in range(steps):
-                new_pos = pos + direction.increment
-                if map.get(new_pos) == "#":
+                traversed_pos, traversed_direction, blocked = traverse_edge_func(map, pos, direction)
+                if blocked:
                     break
-                if map.get(new_pos) == " ":
-                    traversed_pos, traversed_direction, blocked = traverse_edge_func(map, new_pos, direction)
-                    if blocked:
-                        break
-                    direction = traversed_direction
-                    new_pos = traversed_pos
-                pos = new_pos
+                direction = traversed_direction
+                pos = traversed_pos
                 map.set(pos, direction.symbol)
             direction = self.__get_next_direction(direction, entry[1])
             map.set(pos, direction.symbol)
@@ -60,17 +55,19 @@ class DaySolver(PuzzleSolver):
         return pos, direction
 
     def __traverse_edge_part1(self, map: Grid, pos: Point, direction: Direction):
-        match direction.symbol:
-            case ">":
-                new_pos = Point(0, pos.y)
-            case "<":
-                new_pos = Point(map.max_x, pos.y)
-            case "v":
-                new_pos = Point(pos.x, 0)
-            case "^":
-                new_pos = Point(pos.x, map.max_y)
-        while map.get(new_pos) == " ":
-            new_pos += direction.increment
+        new_pos = pos + direction.increment
+        if not map.is_set(new_pos):
+            match direction.symbol:
+                case ">":
+                    new_pos = Point(0, pos.y)
+                case "<":
+                    new_pos = Point(map.max_x, pos.y)
+                case "v":
+                    new_pos = Point(pos.x, 0)
+                case "^":
+                    new_pos = Point(pos.x, map.max_y)
+            while map.get(new_pos) == " ":
+                new_pos += direction.increment
 
         blocked = map.get(new_pos) == "#"
 
@@ -114,68 +111,74 @@ class DaySolver(PuzzleSolver):
         return answer
 
     def __traverse_edge_part2(self, map: Grid, pos: Point, direction: Direction):
+        new_pos = pos + direction.increment
         cs = self.cs
-        ic(pos)
-        match pos:
+        match new_pos:
             case p if p.x in range(cs + 1, 2 * cs + 1) and p.y == 0:       # 1 -> 6
                 new_direction = right
-                new_pos = Point(1, (pos.x - cs) + 3 * cs)
+                new_pos = Point(1, (p.x - cs) + 3 * cs)
 
             case p if p.x == cs and p.y in range(1, cs + 1):        # 1 -> 5
                 new_direction = right
-                new_pos = Point(1, (3 * cs + 1) - pos.y)
+                new_pos = Point(1, (3 * cs + 1) - p.y)
 
             case p if p.x == 3 * cs + 1 and p.y in range(1, cs + 1):       # 2 -> 4
                 new_direction = left
-                new_pos = Point(2 * cs, (3 * cs + 1) - pos.y)
+                new_pos = Point(2 * cs, (3 * cs + 1) - p.y)
 
             case p if p.x in range(2 * cs + 1, 3 * cs + 1) and p.y == 0:      # 2 -> 6
                 new_direction = up
-                new_pos = Point((pos.x - 2 * cs), 4 * cs)
+                new_pos = Point((p.x - 2 * cs), 4 * cs)
 
             case p if p.x in range(2 * cs + 1, 3 * cs + 1) and p.y == cs + 1:     # 2 -> 3
                 new_direction = left
-                new_pos = Point(2 * cs, (pos.x - 2 * cs) + cs)
+                new_pos = Point(2 * cs, (p.x - 2 * cs) + cs)
 
             case p if p.x == cs and p.y in range(cs + 1, 2 * cs + 1):      # 3 -> 5
                 new_direction = down
-                new_pos = Point((pos.y - cs), 2 * cs + 1)
+                new_pos = Point((p.y - cs), 2 * cs + 1)
 
             case p if p.x == 2 * cs + 1 and p.y in range(cs + 1, 2 * cs + 1):     # 3 -> 2
                 new_direction = up
-                new_pos = Point((pos.y - cs) + 2 * cs, cs)
+                new_pos = Point((p.y - cs) + 2 * cs, cs)
 
             case p if p.x == 2 * cs + 1 and p.y in range(2 * cs + 1, 3 * cs + 1):    # 4 -> 2
                 new_direction = left
-                new_pos = Point(3 * cs, (cs + 1) - (pos.y - 2 * cs))
+                new_pos = Point(3 * cs, (cs + 1) - (p.y - 2 * cs))
 
             case p if p.x in range(cs + 1, 2 * cs + 1) and p.y == 3 * cs + 1:     # 4 -> 6
                 new_direction = left
-                new_pos = Point(cs, (pos.x - cs) + 3 * cs)
+                new_pos = Point(cs, (p.x - cs) + 3 * cs)
 
             case p if p.x in range(1, cs + 1) and p.y == 2 * cs:       # 5 -> 3
                 new_direction = right
-                new_pos = Point(cs + 1, pos.x + cs)
+                new_pos = Point(cs + 1, p.x + cs)
 
-            case p if p.x == 0 and pos.y in range(2 * cs + 1, 3 * cs + 1):    # 5 -> 1
+            case p if p.x == 0 and p.y in range(2 * cs + 1, 3 * cs + 1):    # 5 -> 1
                 new_direction = right
-                new_pos = Point(cs + 1, (cs + 1) - (pos.y - 2 * cs))
+                new_pos = Point(cs + 1, (cs + 1) - (p.y - 2 * cs))
 
             case p if p.x == cs + 1 and p.y in range(3 * cs + 1, 4 * cs + 1):     # 6 -> 4
                 new_direction = up
-                new_pos = Point((pos.y - 3 * cs) + cs, 3 * cs)
+                new_pos = Point((p.y - 3 * cs) + cs, 3 * cs)
 
             case p if p.x == 0 and p.y in range(3 * cs + 1, 4 * cs + 1):      # 6 -> 1
                 new_direction = down
-                new_pos = Point((pos.y - 3 * cs) + cs, 1)
+                new_pos = Point((p.y - 3 * cs) + cs, 1)
 
             case p if p.x in range(1, cs + 1) and p.y == 4 * cs + 1:       # 6 -> 2
                 new_direction = down
-                new_pos = Point(pos.x + 2 * cs, 1)
+                new_pos = Point(p.x + 2 * cs, 1)
 
-        ic(new_pos)
+            case _:
+                new_direction = direction
+
+        if direction != new_direction:
+            ic(pos, direction, new_pos, new_direction)
+
         if map.get(new_pos) == "#":
             return None, None, True
+
         return new_pos, new_direction, False
 
 
@@ -202,5 +205,6 @@ example_input2 = """    ...#.#..
 
 if __name__ == "__main__":
     AoCHelper(DaySolver())\
+        .test("a")\
         .test_with('b', example_input2.splitlines(), 10 * 1000 + 1 * 4 + 2)\
         .solve("b").submit()

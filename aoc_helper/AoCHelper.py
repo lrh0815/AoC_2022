@@ -93,24 +93,22 @@ class Grid(object):
             print(f"z = {z}")
             print("    ", end="")
             for x in range(min_x, max_x + 1):
-                if x % 5 == 0:
+                if x >= 100:
                     print(f"{(x//100)%10}", end="")
                 else:
                     print(" ", end="")
             print()
             print("    ", end="")
             for x in range(min_x, max_x + 1):
-                if x % 5 == 0:
+                if x >= 10:
                     print(f"{(x//10)%10}", end="")
                 else:
                     print(" ", end="")
             print()
             print("    ", end="")
             for x in range(min_x, max_x + 1):
-                if x % 5 == 0:
-                    print(f"{x%10}", end="")
-                else:
-                    print(" ", end="")
+                print(f"{x%10}", end="")
+            
             if reverse_y:
                 y_range = range(min_y, max_y + 1)
             else:
@@ -120,6 +118,25 @@ class Grid(object):
                 print(f"{y:3} ", end="")
                 for x in range(min_x, max_x + 1):
                     print(self.get(Point(x, y, z)), end="")
+
+            print()
+            print("    ", end="")
+            for x in range(min_x, max_x + 1):
+                if x >= 100:
+                    print(f"{(x//100)%10}", end="")
+                else:
+                    print(" ", end="")
+            print()
+            print("    ", end="")
+            for x in range(min_x, max_x + 1):
+                if x >= 10:
+                    print(f"{(x//10)%10}", end="")
+                else:
+                    print(" ", end="")
+            print()
+            print("    ", end="")
+            for x in range(min_x, max_x + 1):
+                print(f"{x%10}", end="")
             print()
 
 
