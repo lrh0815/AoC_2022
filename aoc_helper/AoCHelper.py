@@ -48,6 +48,9 @@ class Grid(object):
 
     def get(self, point: Point):
         return self.__grid.get(point, self.default_value)
+    
+    def is_set(self, point: Point):
+        return point in self.__grid.keys()
 
     @property
     def min_x(self) -> int:

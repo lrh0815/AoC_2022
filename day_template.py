@@ -1,6 +1,10 @@
 from aoc_helper.AoCHelper import *
 import re
 from dataclasses import dataclass
+from icecream import ic
+from collections import deque
+from rich import print
+from rich.progress import Progress
 
 
 class DaySolver(PuzzleSolver):
