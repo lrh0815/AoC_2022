@@ -4,7 +4,8 @@ from dataclasses import dataclass
 from icecream import ic
 from collections import deque
 from rich import print
-from rich.progress import Progress
+from rich.progress import track
+from rich.status import Status
 
 
 class DaySolver(PuzzleSolver):
@@ -18,12 +19,13 @@ class DaySolver(PuzzleSolver):
         return None
 
 
-example_input1 = """"""
+example_input1 = """""".splitlines()
 
-example_input2 = """"""
+example_input2 = """""".splitlines()
 
 if __name__ == "__main__":
     AoCHelper(DaySolver())\
-        .test_with('a', example_input1.splitlines(), None)\
-        .test_with('b', example_input2.splitlines(), None)\
+        .test()\
+        .test_with('a', example_input1, None)\
+        .test_with('b', example_input2, None)\
         .solve().submit()
