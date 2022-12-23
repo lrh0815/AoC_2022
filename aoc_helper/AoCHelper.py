@@ -92,23 +92,27 @@ class Grid(object):
         for z in range(min_z, max_z+1):
             print(f"z = {z}")
             print("    ", end="")
-            for x in range(min_x, max_x + 1):
+            for x in range(min_x, max_x + 1, 2):
                 if x >= 100:
-                    print(f"{(x//100)%10}", end="")
+                    print(f"{(x//100)%10}", end=" ")
                 else:
-                    print(" ", end="")
+                    print(" ", end=" ")
             print()
             print("    ", end="")
-            for x in range(min_x, max_x + 1):
+            for x in range(min_x, max_x + 1, 2):
                 if x >= 10:
-                    print(f"{(x//10)%10}", end="")
+                    print(f"{(x//10)%10}", end=" ")
                 else:
-                    print(" ", end="")
+                    print(" ", end=" ")
             print()
             print("    ", end="")
-            for x in range(min_x, max_x + 1):
-                print(f"{x%10}", end="")
-            
+            for x in range(min_x, max_x + 1, 2):
+                print(f"{x%10}", end=" ")
+            print()
+            print("    ", end="")
+            for x in range(min_x, max_x + 1, 2):
+                print(f"|", end=" ")
+
             if reverse_y:
                 y_range = range(min_y, max_y + 1)
             else:
@@ -121,22 +125,26 @@ class Grid(object):
 
             print()
             print("    ", end="")
-            for x in range(min_x, max_x + 1):
+            for x in range(min_x, max_x + 1, 2):
+                print(f"|", end=" ")
+            print()
+            print("    ", end="")
+            for x in range(min_x, max_x + 1, 2):
                 if x >= 100:
-                    print(f"{(x//100)%10}", end="")
+                    print(f"{(x//100)%10}", end=" ")
                 else:
-                    print(" ", end="")
+                    print("|", end=" ")
             print()
             print("    ", end="")
-            for x in range(min_x, max_x + 1):
+            for x in range(min_x, max_x + 1, 2):
                 if x >= 10:
-                    print(f"{(x//10)%10}", end="")
+                    print(f"{(x//10)%10}", end=" ")
                 else:
-                    print(" ", end="")
+                    print("|", end=" ")
             print()
             print("    ", end="")
-            for x in range(min_x, max_x + 1):
-                print(f"{x%10}", end="")
+            for x in range(min_x, max_x + 1, 2):
+                print(f"{x%10}", end=" ")
             print()
 
 
