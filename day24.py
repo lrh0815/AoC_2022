@@ -30,6 +30,10 @@ class DaySolver(PuzzleSolver):
         target = Point(len(input[0])-2,  len(input)-1)
         map = self.__create_map(input)
 
+        minutes, _ = self.__shortest_path(start, target, map)
+        return minutes
+
+    def __shortest_path(self, start, target, map):
         positions: set[Point] = {start}
         minutes = 0
         status = Status(f"Minutes {minutes}")
@@ -42,14 +46,14 @@ class DaySolver(PuzzleSolver):
             for pos in positions:
                 for dir in [UP, RIGHT, DOWN, LEFT, WAIT]:
                     new_pos = pos + dir
-                    if new_pos.y < 0:
+                    if new_pos.y < 0 or new_pos.y >= len(map):
                         continue
                     if new_map[new_pos.y][new_pos.x] == 0:
                         new_positions.add(new_pos)
             positions = new_positions
             map = new_map
         status.stop()
-        return minutes
+        return minutes, map
 
     def __create_map(self, input):
         map = []
@@ -109,7 +113,15 @@ class DaySolver(PuzzleSolver):
         return tuple([tuple(row) for row in new_map])
 
     def solve_b(self, input: list[str]):
-        return None
+        start = Point(1, 0)
+        target = Point(len(input[0])-2,  len(input)-1)
+        map = self.__create_map(input)
+
+        minutes1, map = self.__shortest_path(start, target, map)
+        minutes2, map = self.__shortest_path(target, start, map)
+        minutes3, map = self.__shortest_path(start, target, map)
+
+        return minutes1 + minutes2 + minutes3
 
 
 example_input1 = """""".splitlines()
@@ -124,4 +136,5 @@ example_input2 = """#.######
 if __name__ == "__main__":
     AoCHelper(DaySolver())\
         .test_with('a', example_input2, 18)\
+        .test_with('b', example_input2, 54)\
         .solve().submit()
