@@ -97,12 +97,10 @@ class DaySolver(PuzzleSolver):
         return self.__simulate_rocks_falling(input, 1000000000000)
 
 
-example_input1 = """>>><<><>><<<>><>>><<<>>><<<><<<>><>><<>>"""
-
-example_input2 = """"""
+example_input = """>>><<><>><<<>><>>><<<>>><<<><<<>><>><<>>"""
 
 if __name__ == "__main__":
     AoCHelper(DaySolver())\
-        .test_with('b', example_input1.splitlines(), 1514285714288)\
+        .test_with('a', example_input.splitlines(), 3068)\
+        .test_with('b', example_input.splitlines(), 1514285714288)\
         .solve("b").submit()
-    # .test_with('a', example_input1.splitlines(), 3068)\

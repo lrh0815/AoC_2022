@@ -174,13 +174,11 @@ class DaySolver(PuzzleSolver):
         return answer
 
 
-example_input1 = """Blueprint 1: Each ore robot costs 4 ore. Each clay robot costs 2 ore. Each obsidian robot costs 3 ore and 14 clay. Each geode robot costs 2 ore and 7 obsidian.
+example_input = """Blueprint 1: Each ore robot costs 4 ore. Each clay robot costs 2 ore. Each obsidian robot costs 3 ore and 14 clay. Each geode robot costs 2 ore and 7 obsidian.
 Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsidian robot costs 3 ore and 8 clay. Each geode robot costs 3 ore and 12 obsidian."""
-
-example_input2 = """"""
 
 if __name__ == "__main__":
     AoCHelper(DaySolver())\
-        .test_with('a', example_input1.splitlines(), 33)\
-        .test_with('b', example_input1.splitlines(), 55 * 61)\
+        .test_with('a', example_input.splitlines(), 33)\
+        .test_with('b', example_input.splitlines(), 55 * 61)\
         .solve().submit()

@@ -80,10 +80,6 @@ class DaySolver(PuzzleSolver):
         return answer
 
 
-example_input1 = """"""
-
-example_input2 = """"""
-
 if __name__ == "__main__":
     AoCHelper(DaySolver())\
         .test().solve().submit()

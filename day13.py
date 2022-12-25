@@ -64,10 +64,6 @@ class DaySolver(PuzzleSolver):
         return divider_packet_1_index * divider_packet_2_index
 
 
-example_input1 = """"""
-
-example_input2 = """"""
-
 if __name__ == "__main__":
     AoCHelper(DaySolver())\
         .test().solve()

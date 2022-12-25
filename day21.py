@@ -1,6 +1,4 @@
 from aoc_helper.AoCHelper import *
-import re
-from dataclasses import dataclass
 
 
 class Monkey(object):
@@ -73,7 +71,7 @@ class DaySolver(PuzzleSolver):
                     was_greater = False
 
             monkey_2_number = self.__monkey_2_number_with_my_number(monkeys, root_monkey, my_number)
-        
+
         print()
         return my_number
 

@@ -1,10 +1,4 @@
 from aoc_helper.AoCHelper import *
-import re
-from dataclasses import dataclass
-from icecream import ic
-from collections import deque
-from rich import print
-from rich.progress import track
 from rich.status import Status
 import copy
 
@@ -124,9 +118,7 @@ class DaySolver(PuzzleSolver):
         return minutes1 + minutes2 + minutes3
 
 
-example_input1 = """""".splitlines()
-
-example_input2 = """#.######
+example_input = """#.######
 #>>.<^<#
 #.<..<<#
 #>v.><>#
@@ -135,6 +127,6 @@ example_input2 = """#.######
 
 if __name__ == "__main__":
     AoCHelper(DaySolver())\
-        .test_with('a', example_input2, 18)\
-        .test_with('b', example_input2, 54)\
+        .test_with('a', example_input, 18)\
+        .test_with('b', example_input, 54)\
         .solve().submit()

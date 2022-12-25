@@ -39,10 +39,6 @@ class DaySolver(PuzzleSolver):
         return None
 
 
-example_input1 = """""".splitlines()
-
-example_input2 = """""".splitlines()
-
 if __name__ == "__main__":
     AoCHelper(DaySolver())\
         .test()\

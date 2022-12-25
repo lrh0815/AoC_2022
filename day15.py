@@ -1,6 +1,7 @@
 from aoc_helper.AoCHelper import *
 import re
 
+
 class DaySolver(PuzzleSolver):
     def __init__(self):
         PuzzleSolver.__init__(self, 2022, 15, 26, 56000011, True)
@@ -79,10 +80,6 @@ class DaySolver(PuzzleSolver):
                 return False
         return True
 
-
-example_input1 = """"""
-
-example_input2 = """"""
 
 if __name__ == "__main__":
     AoCHelper(DaySolver())\

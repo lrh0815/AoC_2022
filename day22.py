@@ -195,9 +195,7 @@ class DaySolver(PuzzleSolver):
         return new_pos, new_direction, False
 
 
-example_input1 = """"""
-
-example_input2 = """    ...#.#..
+example_input = """    ...#.#..
     .#......
     #.....#.
     ........
@@ -219,7 +217,7 @@ example_input2 = """    ...#.#..
 if __name__ == "__main__":
     AoCHelper(DaySolver())\
         .test("a")\
-        .test_with('b', example_input2.splitlines(), 10 * 1000 + 1 * 4 + 2)\
+        .test_with('b', example_input.splitlines(), 10 * 1000 + 1 * 4 + 2)\
         .solve().submit()
 
 

@@ -61,7 +61,7 @@ class DaySolver(PuzzleSolver):
             print(line)
 
 
-example_input1 = """addx 15
+example_input = """addx 15
 addx -11
 addx 6
 addx -3
@@ -208,10 +208,8 @@ noop
 noop
 noop"""
 
-example_input2 = """"""
-
 if __name__ == "__main__":
     AoCHelper(DaySolver())\
-        .test_with('a', example_input1.splitlines(), 13140)\
-        .test_with('b', example_input1.splitlines(), "dummy")\
+        .test_with('a', example_input.splitlines(), 13140)\
+        .test_with('b', example_input.splitlines(), "dummy")\
         .solve().submit()
