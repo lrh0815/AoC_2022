@@ -6,6 +6,7 @@ from collections import deque
 from rich import print
 from rich.progress import track
 from rich.status import Status
+from itertools import chain, combinations
 
 
 @dataclass(frozen=True)
@@ -44,33 +45,62 @@ class DaySolver(PuzzleSolver):
         distances = self.__get_min_distances(all_valves)
         flow_valves = {valve.name: valve for valve in all_valves.values() if valve.flow_rate > 0}
 
-        minutes_left = 30
-        total_flow = 0
+        answer = self.__find_max_released_pressure(30, distances, flow_valves, flow_valves.keys())
+        return answer
+
+    def __find_max_released_pressure(self, remaining_minutes, distances, flow_valves: dict[str, Valve], valve_subset):
         visited = {}
-        queue = deque()
+        queue = deque([("AA", remaining_minutes, 0, frozenset())])
 
-        queue.append(("AA", 30, 0, frozenset()))
-
-        status = Status(f"Queue {len(queue)}")
-        status.start()
         while len(queue) > 0:
-            status.update(f"Queue {len(queue)}")
-            current_valve, minutes_left, total_flow, open_valves = queue.pop()
-            for next_valve in [v for v in flow_valves if v not in open_valves]:
+            current_valve, minutes_left, released_pressure, open_valves = queue.pop()
+            for next_valve in [v for v in valve_subset if v not in open_valves]:
                 next_minutes_left = minutes_left - distances[current_valve][next_valve] - 1
                 if next_minutes_left <= 0:
                     continue
                 next_open_valves = open_valves.union([next_valve])
-                next_total_flow = total_flow + flow_valves[next_valve].flow_rate * next_minutes_left
-                if visited.get(next_open_valves, 0) < next_total_flow:
-                    visited[next_open_valves] = next_total_flow
-                    queue.append((next_valve, next_minutes_left, next_total_flow, next_open_valves))
-        status.stop()
+                next_released_pressure = released_pressure + flow_valves[next_valve].flow_rate * next_minutes_left
+                if visited.get(next_open_valves, 0) < next_released_pressure:
+                    visited[next_open_valves] = next_released_pressure
+                    queue.append((next_valve, next_minutes_left, next_released_pressure, next_open_valves))
         answer = max(visited.values())
         return answer
 
     def solve_b(self, input: list[str]):
-        return None
+        all_valves = self.__read_input(input)
+        distances = self.__get_min_distances(all_valves)
+        flow_valves = {valve.name: valve for valve in all_valves.values() if valve.flow_rate > 0}
+
+        all_flow_valves = set(flow_valves.keys())
+
+        subsets = list(chain.from_iterable(combinations(flow_valves, r) for r in range(1, len(flow_valves) + 1)))
+        num_subsets = len(subsets)
+
+        status = Status(f"Find released pressure per subset")
+        status.start()
+
+        released_pressures = {}
+        for i, subset in enumerate(subsets):
+            status.update(f"Find released pressure per subset {i+1}/{num_subsets}")
+            if len(subset) == len(all_flow_valves):
+                continue
+            max_release_pressure = self.__find_max_released_pressure(26, distances, flow_valves, subset)
+            key = "".join(sorted(subset))
+            released_pressures[key] = max_release_pressure
+
+        max_combined_released_pressure = 0
+        for i, subset in enumerate(subsets):
+            status.update(f"Find max released pressure per combination {i+1}/{num_subsets}")
+            if len(subset) == len(all_flow_valves):
+                continue
+            complement_key = "".join(sorted(all_flow_valves.difference(subset)))
+            subset_key = "".join(sorted(subset))
+            combined_released_pressure = released_pressures[subset_key] + released_pressures[complement_key]
+            if max_combined_released_pressure < combined_released_pressure:
+                max_combined_released_pressure = combined_released_pressure
+        status.stop()
+
+        return max_combined_released_pressure
 
 
 if __name__ == "__main__":
